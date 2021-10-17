@@ -1,0 +1,7 @@
+int parr[] = primpoints(0,@primnum);
+float dis = chf('dis');
+vector pplus = normalize(@N)*dis;
+for(int i = 0;i<len(parr);i++)
+{
+    setpointattrib(0,'P',parr[i],pplus,'add');
+}

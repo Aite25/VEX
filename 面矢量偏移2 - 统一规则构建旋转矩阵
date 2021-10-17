@@ -1,0 +1,23 @@
+vector apoint = normalize(@N);
+vector axis;
+axis[clamp(chi('axis'),0,2)] = 1;
+vector axis1 = normalize(cross(axis,apoint));
+vector axis2 = normalize(cross(apoint,axis1));
+
+matrix3 trans;
+
+if(axis == {1,0,0}){
+    trans = set(apoint,axis1,axis2);
+}else if(axis == {0,1,0}){
+    trans = set(axis2,apoint,axis1);
+}else if(axis == {0,0,1}){
+    trans = set(axis1,axis2,apoint);
+}
+
+int parr[] = primpoints(0,@primnum);
+//vector offset = chv('offset');
+vector pplus = trans * chv('offset');
+for(int i = 0;i<len(parr);i++)
+{
+    setpointattrib(0,'P',parr[i],pplus,'add');
+}

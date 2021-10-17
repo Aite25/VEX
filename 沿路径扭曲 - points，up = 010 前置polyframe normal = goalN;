@@ -1,0 +1,30 @@
+vector bb = relbbox(0, v@P );
+bb.y = fit(bb.y, 0, 1, 0, chf("curvePosition") );
+f@pathU = bb.y;
+
+vector goaluv;
+
+goaluv.x = f@pathU + chf('offset');
+
+v@goalP = primuv(1, "P" , 0, goaluv);
+v@tangentU = primuv(1, "tangentV" , 0, goaluv);
+v@tangentV = primuv(1, "tangentU" , 0, goaluv);
+
+v@goalN = cross(@tangentU, @tangentV );
+if(dot(v@goalN, chv("up")) <0 )
+    @goalN *= -1;
+
+@tangentV = cross(@goalN, @tangentU );
+
+@tangentU = normalize(@tangentU);
+@tangentV = normalize(@tangentV);
+
+@goalN = normalize(@goalN);
+
+matrix m = set( v@tangentU.x, v@tangentU.y, v@tangentU.z, 0,
+            v@tangentV.x, v@tangentV.y, v@tangentV.z, 0,
+            v@goalN.x, v@goalN.y, v@goalN.z, 0,
+            v@goalP.x,  v@goalP.y,  v@goalP.z, 1
+           );
+           
+@P = v@P * m;

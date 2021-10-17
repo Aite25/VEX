@@ -1,0 +1,7 @@
+string path = "../../cam1/";
+v@cam = set(ch( path + "tx" ),ch( path + "ty" ),ch( path + "tz" ));
+v@camr = set(ch( path + "rx" ),ch( path + "ry" ),ch( path + "rz" ));
+f@focus = ch( path + "focal" );
+f@apeature = ch( path + "aperture" );
+u@resolution = set(ch(path + "resx"),ch(path + "resy"));
+4@camtrans = maketransform(0,0,v@cam,v@camr);

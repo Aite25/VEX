@@ -1,0 +1,9 @@
+int parr[] = primpoints(0,@primnum);
+vector axis = chv('axis');
+matrix3 mat = dihedral(axis,normalize(@P));
+vector offset = chv('offset');
+vector pplus = mat*offset;
+for(int i = 0;i<len(parr);i++)
+{
+    setpointattrib(0,'P',parr[i],pplus,'add');
+}

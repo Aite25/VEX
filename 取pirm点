@@ -1,0 +1,12 @@
+int points[] = primpoints(0,0);
+int num = chi('num');
+float step = chf('step');
+vector lastpos = point(0,'P',points[int(clamp(num*step+1,0,len(points)-1))]);
+vector pos = point(0,'P',points[clamp(int(num*step),0,len(points)-1)]);
+vector newpos = lerp(pos,lastpos,frac(step*num));
+
+int pointnum = addpoint(0,newpos);
+setpointattrib(0,'N',pointnum,normalize(pos - lastpos),'set');
+setpointattrib(0,'up',pointnum,chv('up'),'set');
+
+for(int i = 0;i<len(points);i++)removepoint(0,points[i],0);

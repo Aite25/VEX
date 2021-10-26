@@ -1,0 +1,27 @@
+f@pathU = (float(@ptnum)/(@numpt-1));
+
+vector goaluv;
+if(chi('loop') == 1){
+    goaluv.x = (f@pathU + chf('offset'))%1;
+}else{
+    goaluv.x = (f@pathU + chf('offset'));
+}
+
+if(goaluv.x>=1)removepoint(0,@ptnum);
+
+v@goalP = primuv(0, "P" , 0, goaluv);
+@P = v@goalP;
+
+int pcount = chi('pcount');
+if(@ptnum%pcount == 0 && @ptnum<@numpt-pcount){
+    addprim(0,'poly');
+    int parr[];
+    for(int i = 0;i<pcount;i++){
+        int pa = addpoint(0,@ptnum+i);
+        setpointattrib(0,'mat',pa,3@mat);
+        push(parr,pa);
+    }
+    addprim(0,'polyline',parr);
+    
+}
+removepoint(0, @ptnum);

@@ -1,0 +1,2 @@
+4@xform = detail(1,'xform',0);
+@P = ( transpose(3@mat) * 4@xform * (3@mat) * ( @P - @rest ))+@rest;

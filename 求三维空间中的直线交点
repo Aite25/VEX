@@ -1,0 +1,70 @@
+function vector line_intersect(vector p0,p1,p2,p3;float gap;int type){
+    vector p0_t,p1_t,p2_t,p3_t;
+    
+    vector line0 = p1 - p0;
+    vector line1 = p3 - p2;
+    
+    vector crossv = cross(line0,line1);
+    vector crosspos;
+    
+    function vector segmentsIntr(vector a,b,c,d){
+        float denominator = (b[1] - a[1])*(d[0] - c[0]) - (a[0] - b[0])*(c[1] - d[1]);
+        float x = ( (b[0] - a[0]) * (d[0] - c[0]) * (c[1]-a[1])
+          + (b[1] - a[1]) * (d[0] - c[0]) * a[0]
+          - (d[1] - c[1]) * (b[0] - a[0]) * c[0]) / denominator ;
+        float y = -( (b[1] - a[1]) * (d[1] - c[1]) * (c[0] - a[0])
+          +  (b[0] - a[0]) * (d[1] - c[1]) * a[1]
+          -  (d[0] - c[0]) * (b[1] - a[1]) * c[1] ) / denominator ;
+        vector fin = set(x,y,0);
+        return fin;
+    }
+    
+    matrix3 rotmat;
+    if(crossv != {0,0,0}){
+        vector matvec0 = normalize(crossv);
+        vector matvec1 = normalize(cross(crossv,line0));
+        vector matvec2 = normalize(cross(matvec0,matvec1));
+        rotmat = set(
+            matvec2,
+            matvec1,
+            matvec0
+        );
+        matrix3 invrotmat = invert(rotmat);
+        p0_t = p0 * invrotmat;
+        p1_t = p1 * invrotmat;
+        p2_t = p2 * invrotmat;
+        p3_t = p3 * invrotmat;
+        crosspos = segmentsIntr(p0_t,p1_t,p2_t,p3_t);
+        float t0 = (crosspos.x - p0_t.x)/(p1_t.x - p0_t.x);
+        float t1 = (crosspos.x - p2_t.x)/(p3_t.x - p2_t.x);
+        vector pos0 = (p1 - p0) * t0 + p0;
+        vector pos1 = (p3 - p2) * t1 + p2;
+        if(length(pos0-pos1)>gap){
+            type = 2;
+        }else{
+            if(t0 >= 0 && t0<= 1 && t1 >=0 && t1 <= 1){
+                type = 0;
+            }else{type = 1;}
+        }
+        crosspos = (pos0 + pos1)*0.5;
+    }else{
+        crosspos = ((p0 + p1)*0.5 + (p2 + p3)*0.5)*0.5;
+        type = 3;
+    }
+    //type = 0：线段内相交；1：线段外相交；2：大于指定距离；3：平行
+    return crosspos;
+}
+//重载
+function vector line_intersect(vector p0,p1,p2,p3){
+    int type = 0;
+    float gap = 0.0001;
+    return line_intersect(p0,p1,p2,p3,gap,type);
+}
+function vector line_intersect(vector p0,p1,p2,p3;float gap){
+    int type = 0;
+    return line_intersect(p0,p1,p2,p3,gap,type);
+}
+function vector line_intersect(vector p0,p1,p2,p3;int type){
+    float gap = 0.0001;
+    return line_intersect(p0,p1,p2,p3,gap,type);
+}
